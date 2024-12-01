@@ -1,29 +1,31 @@
 const fs = require("fs");
 
-const data = fs.readFileSync("input.txt", "utf8");
-
-result = data.split('\r\n')
-
-console.log(result)
-
-let columnA = []
-let columnB = []
-
-for (let item of result) {
-    let row = (item.split('   '))
-    columnA.push(row[0])
-    columnB.push(row[1])
+function getInput() {
+    const data = fs.readFileSync("input.txt", "utf8");
+    return data.split('\r\n')
 }
 
-columnA.sort()
-columnB.sort()
+function getColumns() {
+    let columnA = []
+    let columnB = []
 
-let distance = 0
-
-for (let i = 0; i < 1000; i++) {
-    let distanceBetweenList = columnB[i] - columnA[i]
-    if (distanceBetweenList < 0) {
-        distanceBetweenList = distanceBetweenList * -1
+    for (let item of getInput()) {
+        let row = (item.split('   '))
+        columnA.push(row[0])
+        columnB.push(row[1])
     }
-    distance += distanceBetweenList
+
+    columnA.sort()
+    columnB.sort()
+    return { columnA, columnB }
 }
+
+function getDistance(columnA, columnB) {
+    if (columnA.length === 0) {
+        return 0
+    }
+    return Math.abs(columnB[0] - columnA[0]) + getDistance(columnA.slice(1), columnB.slice(1))
+}
+
+const {columnA, columnB} = getColumns();
+console.log(getDistance(columnA, columnB))

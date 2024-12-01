@@ -1,27 +1,37 @@
 const fs = require("fs");
 
-const data = fs.readFileSync("input.txt", "utf8");
-
-result = data.split('\r\n')
-
-
-let columnA = []
-let columnB = []
-
-for (let item of result) {
-    let row = (item.split('   '))
-    columnA.push(row[0])
-    columnB.push(row[1])
+function getInput() {
+    const data = fs.readFileSync("input.txt", "utf8");
+    return data.split('\r\n')
 }
 
-function getOccurrences(n) {
-    return columnB.filter(v => v === n).length
+function getColumns() {
+    let columnA = []
+    let columnB = []
+
+    for (let item of getInput()) {
+        let row = (item.split('   '))
+        columnA.push(row[0])
+        columnB.push(row[1])
+    }
+
+    columnA.sort()
+    columnB.sort()
+    return { columnA, columnB }
 }
 
-let similarityScore = 0
+function getOccurrences(n, arr) {
+    return arr.filter(v => v === n).length
+}
 
-columnA.forEach(v => {
-    similarityScore += v * getOccurrences(v)
-})
+function getSimilarityScore(columnA, columnB) {
+    if (columnA.length === 0 ) {
+        return 0
+    }
+    return columnA[0] * getOccurrences(columnA[0], columnB) + getSimilarityScore(columnA.slice(1), columnB)
+}
 
-console.log(similarityScore)
+const {columnA, columnB} = getColumns();
+
+console.log(getSimilarityScore(columnA, columnB))
+
