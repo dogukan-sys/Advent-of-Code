@@ -11,8 +11,8 @@ function getColumns() {
 
     for (let item of getInput()) {
         let row = (item.split('   '))
-        columnA.push(row[0])
-        columnB.push(row[1])
+        columnA.push(parseInt(row[0]))
+        columnB.push(parseInt(row[1]))
     }
 
     columnA.sort()
